@@ -27,17 +27,19 @@ contract HorseToken is ERC20, ERC20Burnable, ERC20Snapshot, Ownable, Pausable {
         _unpause();
     }
 
-    function mint(address to, uint256 amount) public onlyOwner {
-        _mint(to, amount);
-    }
+    
 
-    function setTaxFeePercent(uint256 taxFee) external onlyOwner() {
+    function setTaxFeePercent(uint256 taxFee) external onlyOwner {
           _taxFee = taxFee;
       }
 
-    function setTaxAddress(address taxAddress) external onlyOwner() {
+    function setTaxAddress(address taxAddress) external onlyOwner {
           _taxAddress = taxAddress;
       }
+
+    function TaxAddress() external view returns (address){
+            return _taxAddress;
+    }
 
     function _beforeTokenTransfer(address from, address to, uint256 amount)
         internal
@@ -65,10 +67,7 @@ contract HorseToken is ERC20, ERC20Burnable, ERC20Snapshot, Ownable, Pausable {
 
             // default 99% of transfer sent to recipient
             uint256 sendAmount = amount-(taxAmount);
-            require(
-                amount == sendAmount + taxAmount,
-                "transfer: Tax val invalid"
-            );
+            
 
           
             super._transfer(sender, _taxAddress, taxAmount);
